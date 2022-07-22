@@ -1,0 +1,72 @@
+@font-face {
+    font-family: 'Fredoka One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/fredoka-one-v13-latin-regular.woff2') format('woff2'),
+        url('../fonts/fredoka-one-v13-latin-regular.woff') format('woff');
+}
+
+.body {
+    background-color: #ffc107;
+}
+
+.conteiner {
+    font-family: 'Fredoka One';
+    max-width: 1440px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto; 
+}
+
+.list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0 15px;
+    list-style-type: none;
+    min-width:  500px;
+}
+
+.list .card {
+    text-align: center;
+    border: 3px solid white;
+    width: 30%;
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 1.5vw;
+    background-color: #0dcaf0;
+    transition: all 0.7s ease;
+}
+
+.list :hover {
+    transform: scale(1.1);
+}
+
+.list * :hover {
+    transform: scale(1);
+}
+
+.list h5 {  
+    font-size: 80% !important;
+}
+
+.list img {
+    width: 75%;
+    display: flex;
+    margin: 0 auto;
+    object-fit: contain;
+    object-position: center;
+}
+
+@media only screen and (max-width: 750px) {
+    h3 {
+        font-size: 3vw !important;
+    }
+
+    img {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
