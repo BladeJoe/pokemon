@@ -10,6 +10,7 @@ function renderPokemons(array) {
         newLi.classList.add("card");
         let newImg = document.createElement("img");
         newImg.src = item.img;
+        newImg.setAttribute("alt" , "pokemon")
 
         let newH3 = document.createElement("h3");
         newH3.textContent = item.name;
