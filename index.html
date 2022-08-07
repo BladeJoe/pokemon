@@ -16,15 +16,68 @@
 <body id="main__body" class="body">
 
     <div class="conteiner ">
+
         <img src="./logo.png" alt="" class="d-flex mx-auto mb-5 w-75">
+        <div class="row d-flex mx-auto align-items-start">
 
-        <ul class="list">
-            <li>
-                <img src="https://www.serebii.net/pokemongo/pokemon/001.png" alt="" width="200">
-                <h3>Pikachu</h3>
-            </li>
 
-        </ul>
+
+
+
+            <form class="col-lg-3 form d-flex justify-content-center flex-column mx-auto">
+                <div class="mb-3">
+                    Name
+                    <input type="text" class="form-control search__name">
+                </div>
+
+                <div class="mb-3">
+                    Weight
+                    <input type="number" class="form-control search__weight" default="0" min="0">
+                </div>
+                <div class="mb-3">
+                    Height
+                    <input type="number" class="form-control search__height" default="0" min="0">
+                </div>
+
+
+                <div class="mb-3">
+                    Types
+
+                    <select class="form-select my-3 select__types" aria-label="Default select example">
+                        <option value="all" selected>All</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    Sort
+
+                    <select class="form-select my-3 select__sort" aria-label="Default select example">
+                        <option value="none" selected>Don`t sort</option>
+                        <option value="Tallest-first">Tallest first</option>
+                        <option value="Shortest-first">Shortest first</option>
+                        <option value="heavy-first">Heavy first</option>
+                        <option value="light-first">Light first</option>
+                    </select>
+                </div>
+
+
+                <div class="d-grid my-3">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+
+                <h2>Total <span class="total"></span></h2>
+            </form>
+
+
+            <div class="col-lg-7 d-flex justify-content-center flex-column mx-auto">
+                <ul class="list">
+                    <li>
+                        <img src="https://www.serebii.net/pokemongo/pokemon/001.png" alt="" width="200">
+                        <h3>Pikachu</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
 
