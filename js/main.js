@@ -7,8 +7,9 @@ let inputName = document.querySelector(".search__name")
 let inputWeight = document.querySelector(".search__weight")
 let inputHeight = document.querySelector(".search__height")
 let elSort = document.querySelector(".select__sort")
-let pokemonslice = pokemons.slice(0, 12)
-let normolizedArray = pokemonslice.map(item => {
+
+
+let normolizedArray = pokemons.map(item => {
     return {
         name: item.name.toString(),
         type: item.type,
@@ -17,8 +18,6 @@ let normolizedArray = pokemonslice.map(item => {
         img: item.img
     }
 });
-
-
 
 function getTypes(array) {
 
@@ -52,34 +51,6 @@ function renderTypes(array, wrapper) {
 
 renderTypes(pokemonTypes, elSelect)
 
-
-function renderPokemons(array) {
-    elList.innerHTML = null
-
-    for (let item of array) {
-        let newLi = document.createElement("li");
-        newLi.classList.add("card");
-        let newImg = document.createElement("img");
-        newImg.src = item.img;
-        newImg.setAttribute("alt", "pokemon")
-
-        let newH3 = document.createElement("h3");
-        newH3.textContent = item.name;
-
-        let newh5 = document.createElement("h5")
-        newh5.innerHTML = `Type: ${item.type} <br>
-        Height: ${item.height} <br> Weight: ${item.weight}`;
-
-
-        newLi.appendChild(newImg);
-        newLi.appendChild(newH3);
-        newLi.appendChild(newh5);
-
-        elList.appendChild(newLi)
-
-    }
-}
-
 function renderPokemons(array, wrapper) {
     wrapper.innerHTML = null;
     let totalPokemons = 0;
@@ -97,7 +68,7 @@ function renderPokemons(array, wrapper) {
 
         let newH5 = document.createElement("h5")
         newH5.innerHTML = `Type: ${item.type} <br>
-        Height: ${item.height} <br> Weight: ${item.weight}`;
+        Height: ${item.height} m <br> Weight: ${item.weight} kg`;
 
 
 
@@ -113,7 +84,7 @@ function renderPokemons(array, wrapper) {
         wrapper.appendChild(tempFragment)
 
     } else {
-        wrapper.innerHTML = "<h1>0 Movies found</h1>"
+        wrapper.innerHTML = "<h1>0 Pokemons found</h1>"
     }
 
 
@@ -122,41 +93,43 @@ function renderPokemons(array, wrapper) {
 renderPokemons(normolizedArray, elList)
 
 
-
 elForm.addEventListener("submit", function (evt) {
     evt.preventDefault();
 
 
-    let elName = inputName.value.trim();
-    let elWeight = inputWeight.value.trim();
-    let elHeight = inputHeight.value.trim();
-    let Selected = elSelect.value;
-    let filteredArray = pokemons.filter(function (item) {
-        let sort = Selected == "all" ? true : item.type.includes(Selected)
-        let validation = sort && item.weight >= elWeight && item.height >= elHeight && item.name.search(elName) != -1
-        return validation
-    })
-    filteredArray.sort((a, b) => {
-        if (elSort == "heavy-first") {
-            return b.weight.split(" ")[0] - a.weight.split(" ")[0]
-        }
-        if (elSort == "light-first") {
-            return a.weight.split(" ")[0] - b.weight.split(" ")[0]
-        }
-        if (elSort == "Tallest-first") {
-            return b.height.split(" ")[0] - a.height.split(" ")[0]
-        }
-        if (elSort == "Shortest-first") {
-            return a.height.split(" ")[0] - b.height.split(" ")[0]
-        }
-        if (elSort == "az") {
-            return a === b ? 0 : (a.name < b.name) ? -1 : 1;
-        }
+    let filteredArray = normolizedArray.filter(function (item) {
 
-        if (elSort == "za") {
-            return a === b ? 0 : (b.name < a.name) ? -1 : 1;
+        let name = item.name.toUpperCase();
+        let isertName = inputName.value.toUpperCase();
+
+        let types = elSelect.value == "all" ? true : item.type.includes(elSelect.value);
+
+        let validation = types && item.weight >= Number(inputWeight.value) && item.height >= Number(inputHeight.value) &&
+            (name.startsWith(isertName.toUpperCase()));
+
+        return validation
+
+    })
+
+
+
+
+    filteredArray.sort((a, b) => {
+
+        if (elSort.value == "heavy-first") {
+            return b.weight - a.weight
+        }
+        if (elSort.value == "light-first") {
+            return a.weight - b.weight
+        }
+        if (elSort.value == "tallest-first") {
+            return b.height - a.height
+        }
+        if (elSort.value == "shortest-first") {
+            return a.height - b.height
         }
     })
+
     renderPokemons(filteredArray, elList);
 
 })
