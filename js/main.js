@@ -7,7 +7,21 @@ let inputName = document.querySelector(".search__name")
 let inputWeight = document.querySelector(".search__weight")
 let inputHeight = document.querySelector(".search__height")
 let elSort = document.querySelector(".select__sort")
+let elLikedList = document.querySelector(".like__list");
+let likedItem = document.querySelector("#liked_item").content;
 
+function changeImage() {
+
+    let likedPokemon = document.getElementById("like")
+    console.log(likedPokemon);
+    if (likedPokemon.src == "./../like.png") {
+        likedPokemon.src = "";
+    } else {
+        likedPokemon.src = "./../like.png";
+    }
+}
+
+let likedPokemons = [];
 
 let normolizedArray = pokemons.map(item => {
     return {
@@ -15,7 +29,8 @@ let normolizedArray = pokemons.map(item => {
         type: item.type,
         height: item.height,
         weight: item.weight,
-        img: item.img
+        img: item.img,
+        id: item.id
     }
 });
 
@@ -62,6 +77,7 @@ function renderPokemons(array, wrapper) {
         let newImg = document.createElement("img");
         newImg.src = item.img;
         newImg.setAttribute("alt", "pokemon")
+        newImg.setAttribute("class", "img")
 
         let newH3 = document.createElement("h3");
         newH3.textContent = item.name;
@@ -71,10 +87,23 @@ function renderPokemons(array, wrapper) {
         Height: ${item.height} m <br> Weight: ${item.weight} kg`;
 
 
+        let newLike = document.createElement("img")
+
+        if (likedPokemons.includes(item)) {
+            newLike.id = "liked"
+        } else {
+            console.log("ok");
+            newLike.id = "like";
+        }
+        newLike.src = "./../like.png";
+        newLike.style.width = "20%";
+        newLike.style.height = "20%";
+        newLike.dataset.likeId = item.id;
 
         newLi.appendChild(newImg)
         newLi.appendChild(newH3)
         newLi.appendChild(newH5)
+        newLi.appendChild(newLike)
         tempFragment.appendChild(newLi)
         totalPokemons++;
     }
@@ -92,20 +121,17 @@ function renderPokemons(array, wrapper) {
 
 renderPokemons(normolizedArray, elList)
 
-
-elForm.addEventListener("submit", function (evt) {
+elForm.addEventListener("input", function (evt) {
     evt.preventDefault();
 
 
     let filteredArray = normolizedArray.filter(function (item) {
 
-        let name = item.name.toUpperCase();
-        let isertName = inputName.value.toUpperCase();
-
+        let insertedName = inputName.value.toUpperCase();
+        let pattern = new RegExp(insertedName, 'gi');
         let types = elSelect.value == "all" ? true : item.type.includes(elSelect.value);
 
-        let validation = types && item.weight >= Number(inputWeight.value) && item.height >= Number(inputHeight.value) &&
-            (name.startsWith(isertName.toUpperCase()));
+        let validation = types && item.weight >= Number(inputWeight.value) && item.height >= Number(inputHeight.value) && Boolean(item.name.match(pattern))
 
         return validation
 
@@ -128,8 +154,88 @@ elForm.addEventListener("submit", function (evt) {
         if (elSort.value == "shortest-first") {
             return a.height - b.height
         }
+        if (elSort.value == "a-z") {
+            let firstValue = a.name.toLowerCase();
+            let secondValue = b.name.toLowerCase();
+
+            if (firstValue > secondValue) {
+                return 1
+            } else if (firstValue < secondValue) {
+                return -1
+            } else {
+                return 0
+            }
+        }
+
+        if (elSort.value == "z-a") {
+            let firstValue = a.name.toLowerCase();
+            let secondValue = b.name.toLowerCase();
+
+            if (firstValue > secondValue) {
+                return -1
+            } else if (firstValue < secondValue) {
+                return 1
+            } else {
+                return 0
+            }
+        }
     })
 
     renderPokemons(filteredArray, elList);
 
+})
+
+function renderBookmarks(arrayOfPokemons) {
+    elLikedList.innerHTML = null
+
+    let fragment = document.createDocumentFragment();
+
+    for (const item of arrayOfPokemons) {
+        let likedId = likedItem.cloneNode(true);
+
+        likedId.querySelector(".bookmark__title").textContent = item.name;
+        likedId.querySelector(".bookmark__btn").dataset.likeId = item.id;
+
+        fragment.appendChild(likedId);
+    }
+
+    elLikedList.appendChild(fragment)
+    renderPokemons(normolizedArray, elList)
+
+}
+
+
+elLikedList.addEventListener("click", function (evt) {
+    let likeId = evt.target.dataset.likeId
+    if (likeId) {
+        let FoundLikedPokemons = likedPokemons.findIndex(function (item) {
+            return item.id == likeId
+        })
+
+        likedPokemons.splice(FoundLikedPokemons, 1);
+    }
+    renderBookmarks(likedPokemons);
+})
+
+elList.addEventListener("click", function (evt) {
+    let currentlikeId = evt.target.dataset.likeId;
+
+    if (currentlikeId) {
+        let foundPokemon = normolizedArray.find(function (item) {
+            return item.id == currentlikeId
+        })
+
+        if (likedPokemons.length == 0) {
+            likedPokemons.unshift(foundPokemon)
+        } else {
+            let isMovieInArray = likedPokemons.find(function (item) {
+                return item.id == foundPokemon.id
+            })
+
+            if (!isMovieInArray) {
+                likedPokemons.unshift(foundPokemon)
+            }
+        }
+        renderBookmarks(likedPokemons)
+    }
 })

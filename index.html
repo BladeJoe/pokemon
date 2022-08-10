@@ -23,58 +23,60 @@
 
 
 
+            <div class="col-lg-3 form d-flex justify-content-center flex-column mx-2">
+                <form class="form d-flex justify-content-center flex-column w-75 mx-auto">
+                    <div class="mb-2">
+                        Name
+                        <input type="text" class="form-control search__name">
+                    </div>
 
-            <form class="col-lg-3 form d-flex justify-content-center flex-column mx-auto">
-                <div class="mb-3">
-                    Name
-                    <input type="text" class="form-control search__name">
-                </div>
-
-                <div class="mb-3">
-                    Weight
-                    <input type="number" class="form-control search__weight" default="0" min="0">
-                </div>
-                <div class="mb-3">
-                    Height
-                    <input type="number" class="form-control search__height" default="0" min="0">
-                </div>
-
-
-                <div class="mb-3">
-                    Types
-
-                    <select class="form-select my-3 select__types">
-                        <option value="all" selected>All</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    Sort
-
-                    <select class="form-select my-3 select__sort">
-                        <option value="none" selected>Don`t sort</option>
-                        <option value="tallest-first">Tallest first</option>
-                        <option value="shortest-first">Shortest first</option>
-                        <option value="heavy-first">Heavy first</option>
-                        <option value="light-first">Light first</option>
-                    </select>
-                </div>
+                    <div class="mb-2">
+                        Weight
+                        <input type="number" class="form-control search__weight" default="0" min="0">
+                    </div>
+                    <div class="mb-2">
+                        Height
+                        <input type="number" class="form-control search__height" default="0" min="0">
+                    </div>
 
 
-                <div class="d-grid my-3">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
+                    <div class="mb-2">
+                        Types
 
-                <h2>Total <span class="total"></span></h2>
-            </form>
+                        <select class="form-select my-2 select__types">
+                            <option value="all" selected>All</option>
+                        </select>
+                    </div>
 
+                    <div class="mb-2">
+                        Sort
+
+                        <select class="form-select my-2 select__sort">
+                            <option value="none" selected>Don`t sort</option>
+                            <option value="tallest-first">Tallest first</option>
+                            <option value="shortest-first">Shortest first</option>
+                            <option value="heavy-first">Heavy first</option>
+                            <option value="light-first">Light first</option>
+                            <option value="a-z">A-Z</option>
+                            <option value="z-a">Z-A</option>
+                        </select>
+                    </div>
+
+
+
+                    <h3 class="text-center">Liked Pokemons</h3>
+
+                    <ul class="list-group like__list">
+                    </ul>
+
+                </form>
+            </div>
 
             <div class="col-lg-7 d-flex justify-content-center flex-column mx-auto">
+                <h2 class="my-3 text-center">Total <span class="total"></span></h2>
+
                 <ul class="list">
-                    <li>
-                        <img src="https://www.serebii.net/pokemongo/pokemon/001.png" alt="" width="200">
-                        <h3>Pikachu</h3>
-                    </li>
+
                 </ul>
             </div>
         </div>
@@ -82,6 +84,12 @@
 
 
 
+    <template id="liked_item">
+        <li class="list-group-item p-3">
+            <h4 class="d-inline-block text-truncate h5 bookmark__title" style="max-width: 100%;" >Pokemon</h4>
+            <button class="btn btn-danger btn-sm d-block bookmark__btn" type="button">Remove</button>
+        </li>   
+    </template>    
 
     <script src="./js/pokemon.js"></script>
     <script src="./js/main.js"></script>
