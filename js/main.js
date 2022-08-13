@@ -10,18 +10,14 @@ let elSort = document.querySelector(".select__sort")
 let elLikedList = document.querySelector(".like__list");
 let likedItem = document.querySelector("#liked_item").content;
 
-function changeImage() {
 
-    let likedPokemon = document.getElementById("like")
-    console.log(likedPokemon);
-    if (likedPokemon.src == "./../like.png") {
-        likedPokemon.src = "";
-    } else {
-        likedPokemon.src = "./../like.png";
-    }
-}
 
-let likedPokemons = [];
+let localPokemons = JSON.parse(localStorage.getItem("likedPokemons"))
+
+let likedPokemons = localPokemons ? localPokemons : [];
+
+renderBookmarks(likedPokemons)
+
 
 let normolizedArray = pokemons.map(item => {
     return {
@@ -30,12 +26,15 @@ let normolizedArray = pokemons.map(item => {
         height: item.height,
         weight: item.weight,
         img: item.img,
-        id: item.id
+        id: item.id,
+        isLiked: false
     }
 });
 
-function getTypes(array) {
+let filteredArray = normolizedArray;
 
+
+function getAndRenderTypes(array, wrapper) {
     let getTypes = [];
     for (const item of array) {
         for (const itemCategory of item.type) {
@@ -45,15 +44,12 @@ function getTypes(array) {
         }
     }
 
-    return getTypes
-}
 
-pokemonTypes = getTypes(normolizedArray);
 
-function renderTypes(array, wrapper) {
+
     let tempFragment = document.createDocumentFragment();
 
-    for (const item of array) {
+    for (const item of getTypes) {
         let newOption = document.createElement("option");
         newOption.textContent = item;
         newOption.value = item;
@@ -64,7 +60,7 @@ function renderTypes(array, wrapper) {
     wrapper.appendChild(tempFragment)
 }
 
-renderTypes(pokemonTypes, elSelect)
+getAndRenderTypes(normolizedArray, elSelect)
 
 function renderPokemons(array, wrapper) {
     wrapper.innerHTML = null;
@@ -88,16 +84,9 @@ function renderPokemons(array, wrapper) {
 
 
         let newLike = document.createElement("img")
-
-        if (likedPokemons.includes(item)) {
-            newLike.id = "liked"
-        } else {
-            console.log("ok");
-            newLike.id = "like";
-        }
-        newLike.src = "./../like.png";
-        newLike.style.width = "20%";
-        newLike.style.height = "20%";
+        newLike.src = "./../like.png"
+        newLike.style.width = "15%";
+        newLike.style.height = "15%";
         newLike.dataset.likeId = item.id;
 
         newLi.appendChild(newImg)
@@ -116,16 +105,17 @@ function renderPokemons(array, wrapper) {
         wrapper.innerHTML = "<h1>0 Pokemons found</h1>"
     }
 
-
 }
-
 renderPokemons(normolizedArray, elList)
+
+
+
 
 elForm.addEventListener("input", function (evt) {
     evt.preventDefault();
 
 
-    let filteredArray = normolizedArray.filter(function (item) {
+    filteredArray = normolizedArray.filter(function (item) {
 
         let insertedName = inputName.value.toUpperCase();
         let pattern = new RegExp(insertedName, 'gi');
@@ -181,8 +171,8 @@ elForm.addEventListener("input", function (evt) {
         }
     })
 
-    renderPokemons(filteredArray, elList);
 
+    renderPokemons(filteredArray, elList)
 })
 
 function renderBookmarks(arrayOfPokemons) {
@@ -200,10 +190,38 @@ function renderBookmarks(arrayOfPokemons) {
     }
 
     elLikedList.appendChild(fragment)
-    renderPokemons(normolizedArray, elList)
-
 }
 
+elList.addEventListener("click", function (evt) {
+    let currentlikeId = evt.target.dataset.likeId;
+
+    if (currentlikeId) {
+        let foundPokemon = normolizedArray.find(function (item) {
+            if (item.id == currentlikeId) {
+                item.isLiked = true;
+                return item;
+            }
+        })
+
+        if (likedPokemons.length == 0) {
+            foundPokemon.isLiked = true;
+            likedPokemons.unshift(foundPokemon);
+            localStorage.setItem("likedPokemons", JSON.stringify(likedPokemons));
+        } else {
+            let isPokemonInArray = likedPokemons.find(function (item) {
+                return item.id == foundPokemon.id
+            })
+
+            foundPokemon.isLiked = true;
+            console.log(foundPokemon);
+            if (!isPokemonInArray) {
+                likedPokemons.unshift(foundPokemon)
+                localStorage.setItem("likedPokemons", JSON.stringify(likedPokemons));
+            }
+        }
+        renderBookmarks(likedPokemons)
+    }
+})
 
 elLikedList.addEventListener("click", function (evt) {
     let likeId = evt.target.dataset.likeId
@@ -213,29 +231,9 @@ elLikedList.addEventListener("click", function (evt) {
         })
 
         likedPokemons.splice(FoundLikedPokemons, 1);
+
+        localStorage.setItem("likedPokemons", JSON.stringify(likedPokemons));
     }
+
     renderBookmarks(likedPokemons);
-})
-
-elList.addEventListener("click", function (evt) {
-    let currentlikeId = evt.target.dataset.likeId;
-
-    if (currentlikeId) {
-        let foundPokemon = normolizedArray.find(function (item) {
-            return item.id == currentlikeId
-        })
-
-        if (likedPokemons.length == 0) {
-            likedPokemons.unshift(foundPokemon)
-        } else {
-            let isMovieInArray = likedPokemons.find(function (item) {
-                return item.id == foundPokemon.id
-            })
-
-            if (!isMovieInArray) {
-                likedPokemons.unshift(foundPokemon)
-            }
-        }
-        renderBookmarks(likedPokemons)
-    }
 })
