@@ -65,7 +65,7 @@
 }
 
 #like {
-    content: url("./../like.png") !important;
+    content: url("./../like.png");
 }
 
 #liked {
